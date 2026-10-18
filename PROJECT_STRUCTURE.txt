@@ -1,0 +1,23 @@
+All files are stored in this single folder; there are no nested project folders.
+
+AI_Manager_Prompt.txt
+Client_Followup_Prompt.txt
+Content_Agent_Prompt.txt
+Daily_Log_Template.csv
+Daily_Report_Prompt.txt
+Docker_Compose.yml
+Drafts_Template.csv
+FIREBASE_SETUP.txt
+Google_Apps_Script_Code.gs
+Google_Apps_Script_Setup.txt
+HOSTING_README.txt
+Lead_Research_Prompt.txt
+Leads_Template.csv
+PROJECT_STRUCTURE.txt
+Projects_Template.csv
+Quality_Checker_Prompt.txt
+README.txt
+Tasks_Template.csv
+index.html
+n8n_Setup.txt
+n8n_env_example.txt

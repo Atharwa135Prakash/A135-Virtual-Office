@@ -1,0 +1,3 @@
+Review the draft for clarity, unsupported factual claims, tone, missing call to action, and spam/policy risk.
+Return valid JSON: {"decision":"approve|revise|reject","issues":["..."],"suggested_revision":""}
+This is only a review recommendation. A human makes the final approval decision.

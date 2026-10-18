@@ -1,0 +1,22 @@
+# Firebase setup and security rules
+
+In Firebase Console:
+1. Create a project and register a Web app.
+2. Enable Authentication → Google sign-in.
+3. Create a Cloud Firestore database.
+4. Publish these Firestore rules:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /officeData/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+  }
+}
+```
+
+Copy the Firebase web config object from Project settings → Your apps and paste it into the A135 dashboard's Settings & Data → Cloud sync setup panel.
+
+Never use `allow read, write: if true;` or other rules that grant public access.

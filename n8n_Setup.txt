@@ -1,0 +1,27 @@
+# Optional local automation stack (Windows / macOS / Linux)
+
+## Start
+1. Install Docker Desktop (Windows/macOS) or Docker Engine + Compose (Linux).
+2. Copy `.env.example` to `.env` in this folder.
+3. Replace the placeholder with a long random secret. Keep `.env` private.
+4. Open a terminal in this folder and run `docker compose up -d`.
+5. Open `http://localhost:5678` and create your n8n owner account.
+
+## Stop / restart
+- Stop: `docker compose down`
+- Start: `docker compose up -d`
+- Logs: `docker compose logs -f n8n`
+
+The named volume `n8n_data` persists workflows and credentials across container restarts.
+
+## Optional local AI with Ollama
+1. Install Ollama from https://ollama.com/download.
+2. Pull a small model, e.g. `ollama pull llama3.2`.
+3. If n8n runs inside Docker and Ollama runs directly on your computer, the Ollama URL from inside n8n is usually `http://host.docker.internal:11434` on Docker Desktop.
+4. Configure the relevant n8n model node and test with harmless data.
+
+## What is not preconfigured
+No Google, Telegram, or AI credentials are included. This is intentional. You must configure each credential in n8n and restrict Telegram triggers to your own numeric user ID. The compose file starts n8n only; it does not magically create workflows.
+
+## Safe first workflow
+Start with a manual trigger → Set/Edit Fields node → Google Sheets append row. Verify it works before adding AI. Keep publishing, outbound messages, payments and deletion behind a human approval step.

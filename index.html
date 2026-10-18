@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A135 Virtual Office</title>
+<style>
+:root{--navy:#001f3f;--gold:#ffd700;--paper:#f4f6fa;--ink:#152238;--muted:#65748b;--line:#e1e7f0;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);font:15px/1.45 Inter,Segoe UI,Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(120deg,#00152d,var(--navy));color:white;padding:24px clamp(16px,4vw,48px);display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-bottom:4px solid var(--gold)}
+.brand{display:flex;gap:14px;align-items:center}.logo{width:48px;height:48px;border:2px solid var(--gold);border-radius:12px;display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:19px}.brand h1{font-size:22px;margin:0}.brand p{margin:3px 0 0;color:#c7d5e8;font-size:13px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+button,.btn{border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer;background:var(--navy);color:white}button:hover,.btn:hover{filter:brightness(1.15)}button.gold{background:var(--gold);color:#172033}button.light{background:#e9eef6;color:var(--navy)}button.danger{background:#a52b36}
+.layout{display:grid;grid-template-columns:220px minmax(0,1fr);max-width:1500px;margin:auto;min-height:calc(100vh - 100px)}
+aside{padding:22px 14px;border-right:1px solid var(--line);background:#fff}aside button{display:block;width:100%;text-align:left;margin:4px 0;background:transparent;color:#34445d}aside button.active,aside button:hover{background:#eaf0f8;color:var(--navy)}main{padding:clamp(16px,3vw,34px);min-width:0}
+.eyebrow{text-transform:uppercase;letter-spacing:1.7px;color:#8a6f00;font-size:11px;font-weight:900}.heading{display:flex;align-items:end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px}.heading h2{font-size:28px;margin:4px 0}.muted{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.stat,.panel,.card{background:white;border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:0 3px 12px #001f3f06}.stat .num{font-size:27px;font-weight:850;margin-top:6px}.stat .label{color:var(--muted);font-size:13px}.grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}.panel h3{margin:0 0 13px;font-size:16px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{flex:1;min-width:150px}
+input,select,textarea{width:100%;padding:10px 11px;border:1px solid #cdd6e4;border-radius:8px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:88px;resize:vertical}label{font-size:12px;color:var(--muted);font-weight:700;display:block;margin:8px 0 5px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.formgrid .wide{grid-column:1/-1}.form-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:11px 9px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}td .sub{display:block;color:var(--muted);font-size:12px;margin-top:3px}.tablewrap{overflow:auto}.pill{display:inline-block;border-radius:99px;padding:4px 8px;font-size:11px;font-weight:800;background:#eaf0f8;color:#29445f}.pill.High,.pill.Blocked,.pill.Rejected{background:#ffebeb;color:#a3222e}.pill.Done,.pill.Approved,.pill.Qualified{background:#e0f6e9;color:#176b3b}.pill.Medium,.pill.Awaiting{background:#fff4c7;color:#795d00}.empty{padding:22px;color:var(--muted);text-align:center}.section{display:none}.section.active{display:block}.notice{border-left:3px solid var(--gold);background:#fff9db;padding:12px 14px;border-radius:6px;font-size:13px;margin:12px 0}.quick{display:flex;gap:8px;flex-wrap:wrap}.quick button{flex:1;min-width:130px}.small{font-size:12px}.checkrow{display:flex;gap:8px;align-items:center}.checkrow input{width:auto}.toast{position:fixed;bottom:20px;right:20px;background:#102a43;color:#fff;padding:12px 16px;border-radius:10px;display:none;box-shadow:0 8px 30px #0002;z-index:9}
+@media(max-width:850px){.layout{grid-template-columns:1fr}aside{display:flex;overflow:auto;gap:5px;border-right:0;border-bottom:1px solid var(--line);padding:8px}aside button{white-space:nowrap;width:auto}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}}
+@media(max-width:520px){.stats{grid-template-columns:1fr 1fr}.formgrid{grid-template-columns:1fr}.formgrid .wide{grid-column:auto}.brand h1{font-size:18px}.heading h2{font-size:24px}}
+
+/* Responsive enhancements: phones, tablets, laptops and wide desktops */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { min-width: 320px; }
+img, svg, video, canvas { max-width: 100%; height: auto; }
+button, input, select, textarea { max-width: 100%; }
+button, .btn { min-height: 42px; touch-action: manipulation; }
+input, select, textarea { min-height: 42px; }
+header { position: relative; gap: 14px; }
+header .top-actions { align-items: center; }
+.layout { width: 100%; }
+main { overflow-wrap: anywhere; }
+.panel, .card, .stat { min-width: 0; }
+.tablewrap { max-width: 100%; -webkit-overflow-scrolling: touch; }
+table { min-width: 620px; }
+a { overflow-wrap: anywhere; }
+@media (min-width: 1200px) {
+  .layout { max-width: 1600px; }
+  main { padding: 34px clamp(28px, 3vw, 52px); }
+}
+@media (max-width: 1024px) {
+  .layout { grid-template-columns: 185px minmax(0, 1fr); }
+  aside { padding: 16px 10px; }
+  main { padding: 22px; }
+  .stats { gap: 10px; }
+}
+@media (max-width: 850px) {
+  .layout { display: flex; flex-direction: column; }
+  aside { display: flex; flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; gap: 6px; padding: 8px 10px; position: sticky; top: 0; z-index: 5; background: #fff; scrollbar-width: thin; }
+  aside button[data-tab] { flex: 0 0 auto; width: auto; white-space: nowrap; margin: 0; padding: 10px 12px; }
+  aside .notice { display: none; }
+  main { padding: clamp(14px, 3vw, 24px); }
+  .grid2 { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  header { padding: 16px; align-items: flex-start; }
+  .brand { min-width: 0; gap: 10px; }
+  .logo { width: 42px; height: 42px; flex: 0 0 42px; font-size: 16px; }
+  .brand h1 { font-size: 18px; line-height: 1.25; }
+  .brand p { font-size: 12px; }
+  .top-actions { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .top-actions button { width: 100%; padding: 9px 8px; font-size: 12px; }
+  .heading { align-items: flex-start; }
+  .heading h2 { font-size: 23px; }
+  .stats { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+  .stat { padding: 13px; }
+  .stat .num { font-size: 23px; }
+  .stat .label { font-size: 12px; }
+  .panel, .card { padding: 13px; border-radius: 12px; }
+  .formgrid { grid-template-columns: minmax(0,1fr); }
+  .formgrid .wide { grid-column: auto; }
+  .toolbar { display: grid; grid-template-columns: minmax(0,1fr); }
+  .toolbar input, .toolbar select { min-width: 0; width: 100%; }
+  .quick { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .quick button { min-width: 0; font-size: 12px; padding: 10px 8px; }
+  .form-actions { gap: 7px; }
+  .form-actions button, .form-actions select { flex: 1 1 auto; }
+  .tablewrap { margin: 0; }
+  dialog { max-height: 90vh; overflow-y: auto; }
+  #modalFields { gap: 4px; }
+  #modalFields input, #modalFields select, #modalFields textarea { font-size: 16px; }
+}
+@media (max-width: 380px) {
+  .stats { grid-template-columns: minmax(0,1fr); }
+  .top-actions { grid-template-columns: minmax(0,1fr); }
+  .quick { grid-template-columns: minmax(0,1fr); }
+  main { padding: 12px; }
+  .heading h2 { font-size: 21px; }
+}
+
+</style></head>
+<body>
+<header><div class="brand"><div><img class="logo" src="a135.png" alt=""></div><div><h1>A135 Virtual Office</h1><p>One workspace for tasks, projects, artists, clients and content</p></div></div><div class="top-actions"><button class="gold" onclick="openModal('task')">+ New Task</button><button class="light" onclick="exportJSON()">Export Backup</button><button class="light" onclick="document.getElementById('importFile').click()">Import Backup</button><button class="light" id="cloudButton" onclick="cloudSignIn()">Connect Cloud</button><input id="importFile" type="file" accept=".json,application/json" hidden onchange="importJSON(event)"></div></header>
+<div class="layout"><aside>
+<button class="active" data-tab="overview">▦ Overview</button><button data-tab="tasks">☑ Tasks</button><button data-tab="projects">▣ Projects & Events</button><button data-tab="artists">♫ Artists & Clients</button><button data-tab="leads">⌕ Leads & Sponsors</button><button data-tab="content">✎ Content Drafts</button><button data-tab="reports">▤ Reports</button><button data-tab="settings">⚙ Settings & Data</button>
+<div class="notice small">Local-first starter. Export backups regularly. Data does not sync between devices automatically.</div>
+</aside><main>
+<section id="overview" class="section active"><div class="heading"><div><div class="eyebrow">Command centre</div><h2>Office Overview</h2><div class="muted">Welcome to your A135 workspace.</div></div><div class="muted small" id="today"></div></div>
+<div class="stats"><div class="stat"><div class="label">Open tasks</div><div class="num" id="sOpen">0</div></div><div class="stat"><div class="label">Overdue tasks</div><div class="num" id="sOverdue">0</div></div><div class="stat"><div class="label">Active projects</div><div class="num" id="sProjects">0</div></div><div class="stat"><div class="label">Drafts awaiting review</div><div class="num" id="sDrafts">0</div></div></div>
+<div class="grid2"><div class="panel"><h3>Priority tasks</h3><div id="priorityTasks"></div></div><div class="panel"><h3>Quick actions</h3><div class="quick"><button onclick="openModal('task')">Create task</button><button onclick="openModal('project')">Add project/event</button><button onclick="openModal('artist')">Add artist/client</button><button onclick="openModal('draft')">Create content draft</button></div><div class="notice">Public posts, client outreach, spending and deletion should always require your manual approval.</div><h3 style="margin-top:18px">Latest activity</h3><div id="activity" class="muted small">No activity yet.</div></div></div></section>
+<section id="tasks" class="section"><div class="heading"><div><div class="eyebrow">Execution</div><h2>Tasks</h2></div><button onclick="openModal('task')">+ Add task</button></div><div class="toolbar"><input id="taskSearch" placeholder="Search tasks..." oninput="renderTasks()"><select id="taskStatus" onchange="renderTasks()"><option value="">All statuses</option><option>Pending</option><option>In Progress</option><option>Blocked</option><option>Done</option></select><select id="taskPriority" onchange="renderTasks()"><option value="">All priorities</option><option>High</option><option>Medium</option><option>Low</option></select></div><div class="panel tablewrap" id="tasksTable"></div></section>
+<section id="projects" class="section"><div class="heading"><div><div class="eyebrow">Delivery</div><h2>Projects & Events</h2></div><button onclick="openModal('project')">+ Add project</button></div><div class="grid2" id="projectsGrid"></div></section>
+<section id="artists" class="section"><div class="heading"><div><div class="eyebrow">Relationships</div><h2>Artists & Clients</h2></div><button onclick="openModal('artist')">+ Add record</button></div><div class="toolbar"><input id="artistSearch" placeholder="Search name, type, status..." oninput="renderArtists()"></div><div class="panel tablewrap" id="artistsTable"></div></section>
+<section id="leads" class="section"><div class="heading"><div><div class="eyebrow">Growth</div><h2>Leads & Sponsors</h2></div><button onclick="openModal('lead')">+ Add lead</button></div><div class="notice">Keep the source URL and verify details manually. Never auto-message leads.</div><div class="toolbar"><input id="leadSearch" placeholder="Search leads..." oninput="renderLeads()"></div><div class="panel tablewrap" id="leadsTable"></div></section>
+<section id="content" class="section"><div class="heading"><div><div class="eyebrow">Creative desk</div><h2>Content Drafts</h2></div><button onclick="openModal('draft')">+ New draft</button></div><div class="toolbar"><input id="draftSearch" placeholder="Search drafts..." oninput="renderDrafts()"><select id="draftStatus" onchange="renderDrafts()"><option value="">All statuses</option><option>Draft</option><option>Awaiting Approval</option><option>Approved</option><option>Rejected</option></select></div><div class="grid2" id="draftsGrid"></div></section>
+<section id="reports" class="section"><div class="heading"><div><div class="eyebrow">Management</div><h2>Reports</h2></div><button onclick="exportCSV()">Export tasks CSV</button></div><div class="stats"><div class="stat"><div class="label">Tasks completed</div><div class="num" id="rDone">0</div></div><div class="stat"><div class="label">Completion rate</div><div class="num" id="rRate">0%</div></div><div class="stat"><div class="label">Open leads</div><div class="num" id="rLeads">0</div></div><div class="stat"><div class="label">Awaiting approval</div><div class="num" id="rAwait">0</div></div></div><div class="panel"><h3>Daily brief</h3><div id="dailyBrief"></div><div class="form-actions"><button onclick="copyBrief()">Copy brief</button><button class="light" onclick="exportCSV()">Download task CSV</button></div></div></section>
+<section id="settings" class="section"><div class="heading"><div><div class="eyebrow">Workspace setup</div><h2>Settings & Data</h2></div></div><div class="grid2"><div class="panel"><h3>Workspace profile</h3><label>Workspace name</label><input id="workspaceName" value="A135 Virtual Office"><label>Owner / manager</label><input id="ownerName" value="Office Manager"><label>Business / team</label><input id="businessName" value="A135MUSIKZ • Rap Groove Nation • Swaranjali Studio • Gullak"><div class="form-actions"><button onclick="saveSettings()">Save profile</button></div></div><div class="panel"><h3>Backup & reset</h3><p class="muted small">Export a JSON backup before switching computers or clearing browser data.</p><div class="form-actions"><button onclick="exportJSON()">Export JSON backup</button><button class="light" onclick="document.getElementById('importFile').click()">Import JSON backup</button></div><hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><button class="danger" onclick="resetData()">Reset all local data</button><p class="muted small">Reset is irreversible unless you exported a backup first.</p></div></div><div class="panel" style="margin-top:14px"><h3>Cloud sync setup</h3>
+<p class="muted small">Configure Firebase once to access the same office data from different devices.</p>
+<label>Firebase web config (JSON)</label><textarea id="firebaseConfig" placeholder='{"apiKey":"...","authDomain":"...","projectId":"...","appId":"..."}'></textarea>
+<div class="form-actions"><button onclick="configureFirebase()">Save & connect Firebase</button><button class="light" onclick="cloudSignIn()">Sign in with Google</button><button class="light" onclick="cloudSignOut()">Sign out</button></div>
+<div id="cloudStatus" class="muted small">Cloud sync is not configured.</div>
+<div class="notice">Enable Google sign-in and Firestore in Firebase Console, then apply the rules in FIREBASE_SETUP.md. Do not use public database rules.</div>
+</div><div class="panel" style="margin-top:14px"><h3>Suggested integrations</h3><ul><li>Google Forms + Google Sheets: intake forms and central database (setup files included).</li><li>n8n: workflow automation (starter files included).</li><li>Telegram: commands and alerts after configuring credentials.</li><li>AI provider: local Ollama or a hosted API after setup.</li></ul></div></section>
+</main></div><div class="toast" id="toast"></div>
+<dialog id="modal" style="border:0;border-radius:16px;padding:0;width:min(620px,94vw);box-shadow:0 20px 80px #0004"><div style="padding:20px 22px;border-bottom:1px solid #e1e7f0;display:flex;justify-content:space-between;align-items:center"><h3 id="modalTitle" style="margin:0">New record</h3><button class="light" onclick="closeModal()">Close</button></div><form id="recordForm" style="padding:20px 22px" onsubmit="saveRecord(event)"><div id="modalFields" class="formgrid"></div><div class="form-actions"><button class="gold" type="submit">Save record</button><button type="button" class="light" onclick="closeModal()">Cancel</button></div></form></dialog>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+const KEY='a135_virtual_office_v1';
+let db={tasks:[],projects:[],artists:[],leads:[],drafts:[],activity:[],settings:{workspaceName:'A135 Virtual Office',ownerName:'Office Manager',businessName:'A135MUSIKZ • Rap Groove Nation • Swaranjali Studio • Gullak'}};
+let currentType='task', editingId=null;
+const $=id=>document.getElementById(id);
+function uid(prefix){return prefix+'-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,6).toUpperCase()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function load(){try{let d=JSON.parse(localStorage.getItem(KEY)||'null');if(d)db={...db,...d,settings:{...db.settings,...(d.settings||{})}}}catch(e){}}
+function persist(msg='Saved'){
+  localStorage.setItem(KEY,JSON.stringify(db)); renderAll(); toast(msg);
+  if(window._a135Cloud && window._a135Cloud.user){
+    window._a135Cloud.db.collection('officeData').doc(window._a135Cloud.user.uid).set({
+      data:db, updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+    },{merge:true}).then(()=>setCloudStatus('Cloud synced • '+new Date().toLocaleTimeString()))
+      .catch(err=>setCloudStatus('Cloud sync error: '+err.message));
+  }
+}
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
+function log(s){db.activity.unshift(new Date().toLocaleString()+' — '+s);db.activity=db.activity.slice(0,12)}
+document.querySelectorAll('aside button[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('aside button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');renderAll()});
+const configs={
+task:{title:'Task',prefix:'T',fields:[['title','Task title','text',true],['request','Request / context','textarea'],['priority','Priority','select',['High','Medium','Low']],['owner','Owner','text'],['deadline','Deadline','date'],['status','Status','select',['Pending','In Progress','Blocked','Done']],['notes','Notes','textarea']]},
+project:{title:'Project / Event',prefix:'P',fields:[['name','Project or event name','text',true],['type','Type','select',['Music Release','Event','Studio','Marketing','Operations','Other']],['status','Status','select',['Planning','Active','On Hold','Completed']],['deadline','Date / deadline','date'],['owner','Owner','text'],['budget','Budget (optional)','text'],['notes','Notes','textarea']]},
+artist:{title:'Artist / Client',prefix:'A',fields:[['name','Name','text',true],['type','Type','select',['Artist','Client','Producer','Vendor','Team Member','Venue','Other']],['contact','Contact (optional)','text'],['project','Current project','text'],['status','Relationship status','select',['Prospect','Active','On Hold','Completed']],['notes','Notes','textarea']]},
+lead:{title:'Lead / Sponsor',prefix:'L',fields:[['name','Business / lead name','text',true],['niche','Category / niche','text'],['website','Website','url'],['source','Source URL','url',true],['fit','Why it may fit','textarea'],['status','Status','select',['Needs Verification','Qualified','Contacted Manually','Follow Up','Closed']],['nextAction','Next action','text']]},
+draft:{title:'Content Draft',prefix:'D',fields:[['title','Draft title','text',true],['platform','Platform','select',['Instagram','YouTube','TikTok','Email','WhatsApp','Website','Other']],['content','Draft content','textarea',true],['status','Review status','select',['Draft','Awaiting Approval','Approved','Rejected']],['reviewer','Reviewer','text'],['feedback','Feedback / revision notes','textarea']]}
+};
+function openModal(type,id=null){currentType=type;editingId=id;let c=configs[type],item=id?db[type==='task'?'tasks':type==='project'?'projects':type==='artist'?'artists':type==='lead'?'leads':'drafts'].find(x=>x.id===id):{};$('modalTitle').textContent=(id?'Edit ':'New ')+c.title;$('modalFields').innerHTML=c.fields.map(f=>{let [k,label,kind,extra]=f,v=item[k]||'';if(kind==='select')return `<div><label>${label}</label><select name="${k}">${extra.map(o=>`<option ${v===o?'selected':''}>${o}</option>`).join('')}</select></div>`;if(kind==='textarea')return `<div class="wide"><label>${label}</label><textarea name="${k}" ${extra===true?'required':''}>${esc(v)}</textarea></div>`;return `<div class="${kind==='text'&&label.includes('title')?'wide':''}"><label>${label}</label><input name="${k}" type="${kind}" value="${esc(v)}" ${extra===true?'required':''}></div>`}).join('');$('modal').showModal()}
+function closeModal(){$('modal').close();editingId=null}
+function saveRecord(e){e.preventDefault();let c=configs[currentType],obj={};new FormData(e.target).forEach((v,k)=>obj[k]=v);let key=currentType==='task'?'tasks':currentType==='project'?'projects':currentType==='artist'?'artists':currentType==='lead'?'leads':'drafts';if(editingId){let i=db[key].findIndex(x=>x.id===editingId);db[key][i]={...db[key][i],...obj,updatedAt:new Date().toISOString()};log('Updated '+c.title+': '+(obj.title||obj.name))}else{obj.id=uid(c.prefix);obj.createdAt=new Date().toISOString();if(currentType==='task'&&!obj.owner)obj.owner='You';if(currentType==='task'&&!obj.status)obj.status='Pending';db[key].unshift(obj);log('Created '+c.title+': '+(obj.title||obj.name))}closeModal();persist(c.title+' saved')}
+function del(type,id){if(!confirm('Delete this record? This cannot be undone unless you have a backup.'))return;let key=type==='task'?'tasks':type==='project'?'projects':type==='artist'?'artists':type==='lead'?'leads':'drafts';db[key]=db[key].filter(x=>x.id!==id);log('Deleted '+type+' '+id);persist('Record deleted')}
+function changeStatus(type,id,status){let key=type==='task'?'tasks':type==='draft'?'drafts':type==='project'?'projects':type==='lead'?'leads':'artists';let x=db[key].find(x=>x.id===id);if(x){x.status=status;log('Changed status for '+(x.title||x.name||id)+' to '+status);persist('Status updated')}}
+function pill(s){return `<span class="pill ${esc(s||'')}">${esc(s||'—')}</span>`}
+function table(headers,rows){if(!rows.length)return '<div class="empty">Nothing here yet. Add your first record to get started.</div>';return `<table><thead><tr>${headers.map(x=>'<th>'+x+'</th>').join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`}
+function renderTasks(){let q=($('taskSearch')?.value||'').toLowerCase(),st=$('taskStatus')?.value||'',pr=$('taskPriority')?.value||'';let arr=db.tasks.filter(x=>([x.title,x.request,x.owner,x.notes].join(' ').toLowerCase().includes(q))&&(!st||x.status===st)&&(!pr||x.priority===pr));$('tasksTable').innerHTML=table(['Task','Priority','Owner / due','Status','Actions'],arr.map(x=>`<tr><td><b>${esc(x.title)}</b><span class="sub">${esc(x.request||x.notes||'')}</span></td><td>${pill(x.priority)}</td><td>${esc(x.owner||'You')}<span class="sub">${esc(x.deadline||'No deadline')}</span></td><td><select onchange="changeStatus('task','${x.id}',this.value)">${['Pending','In Progress','Blocked','Done'].map(s=>`<option ${x.status===s?'selected':''}>${s}</option>`).join('')}</select></td><td><button class="light" onclick="openModal('task','${x.id}')">Edit</button> <button class="danger" onclick="del('task','${x.id}')">×</button></td></tr>`))}
+function renderProjects(){$('projectsGrid').innerHTML=db.projects.length?db.projects.map(x=>`<div class="card"><div style="display:flex;justify-content:space-between;gap:10px">${pill(x.type)}${pill(x.status)}</div><h3>${esc(x.name)}</h3><div class="muted small">${esc(x.deadline||'Date not set')} · ${esc(x.owner||'Unassigned')}</div><p>${esc(x.notes||'No notes yet.')}</p><div class="form-actions"><button class="light" onclick="openModal('project','${x.id}')">Edit</button><button class="danger" onclick="del('project','${x.id}')">Delete</button></div></div>`).join(''):'<div class="panel empty">No projects yet. Add an event, release or internal project.</div>'}
+function renderArtists(){let q=($('artistSearch')?.value||'').toLowerCase();let a=db.artists.filter(x=>[x.name,x.type,x.project,x.status].join(' ').toLowerCase().includes(q));$('artistsTable').innerHTML=table(['Name','Type','Project / contact','Status','Actions'],a.map(x=>`<tr><td><b>${esc(x.name)}</b><span class="sub">${esc(x.notes||'')}</span></td><td>${esc(x.type)}</td><td>${esc(x.project||'—')}<span class="sub">${esc(x.contact||'')}</span></td><td>${pill(x.status)}</td><td><button class="light" onclick="openModal('artist','${x.id}')">Edit</button> <button class="danger" onclick="del('artist','${x.id}')">×</button></td></tr>`))}
+function renderLeads(){let q=($('leadSearch')?.value||'').toLowerCase();let a=db.leads.filter(x=>[x.name,x.niche,x.status,x.fit].join(' ').toLowerCase().includes(q));$('leadsTable').innerHTML=table(['Lead','Category / fit','Source','Status','Actions'],a.map(x=>`<tr><td><b>${esc(x.name)}</b><span class="sub">${esc(x.website||'')}</span></td><td>${esc(x.niche||'—')}<span class="sub">${esc(x.fit||'')}</span></td><td>${x.source?`<a href="${esc(x.source)}" target="_blank" rel="noopener">Open source</a>`:'Missing source'}</td><td>${pill(x.status)}</td><td><button class="light" onclick="openModal('lead','${x.id}')">Edit</button> <button class="danger" onclick="del('lead','${x.id}')">×</button></td></tr>`))}
+function renderDrafts(){let q=($('draftSearch')?.value||'').toLowerCase(),st=$('draftStatus')?.value||'';let a=db.drafts.filter(x=>([x.title,x.content,x.platform].join(' ').toLowerCase().includes(q))&&(!st||x.status===st));$('draftsGrid').innerHTML=a.length?a.map(x=>`<div class="card">${pill(x.platform)} ${pill(x.status)}<h3>${esc(x.title)}</h3><p style="white-space:pre-wrap">${esc(x.content)}</p>${x.feedback?`<p class="muted small">Feedback: ${esc(x.feedback)}</p>`:''}<div class="form-actions"><select aria-label="Draft status" onchange="changeStatus('draft','${x.id}',this.value)">${['Draft','Awaiting Approval','Approved','Rejected'].map(s=>`<option ${x.status===s?'selected':''}>${s}</option>`).join('')}</select><button class="light" onclick="openModal('draft','${x.id}')">Edit</button><button class="light" onclick="copyText('${x.id}')">Copy</button><button class="danger" onclick="del('draft','${x.id}')">×</button></div></div>`).join(''):'<div class="panel empty">No drafts yet. Create a caption, script, email or campaign idea.</div>'}
+function renderOverview(){let open=db.tasks.filter(x=>x.status!=='Done'),over=open.filter(x=>x.deadline&&x.deadline<new Date().toISOString().slice(0,10)),active=db.projects.filter(x=>x.status==='Active'||x.status==='Planning'),awaiting=db.drafts.filter(x=>x.status==='Awaiting Approval');$('sOpen').textContent=open.length;$('sOverdue').textContent=over.length;$('sProjects').textContent=active.length;$('sDrafts').textContent=awaiting.length;let top=[...open].sort((a,b)=>({High:0,Medium:1,Low:2}[a.priority]??3)-({High:0,Medium:1,Low:2}[b.priority]??3)).slice(0,6);$('priorityTasks').innerHTML=top.length?top.map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)"><b>${esc(x.title)}</b><div class="muted small">${pill(x.priority)} ${esc(x.deadline||'No deadline')} · ${esc(x.owner||'You')}</div></div>`).join(''):'<div class="empty">No open tasks. Add a task to get started.</div>';$('activity').innerHTML=db.activity.length?db.activity.slice(0,5).map(x=>`<div style="padding:5px 0;border-bottom:1px solid var(--line)">${esc(x)}</div>`).join(''):'No activity yet.'}
+function renderReports(){let done=db.tasks.filter(x=>x.status==='Done').length,open=db.tasks.length-done,rate=db.tasks.length?Math.round(done/db.tasks.length*100):0;$('rDone').textContent=done;$('rRate').textContent=rate+'%';$('rLeads').textContent=db.leads.filter(x=>!['Closed'].includes(x.status)).length;$('rAwait').textContent=db.drafts.filter(x=>x.status==='Awaiting Approval').length;let lines=[`A135 VIRTUAL OFFICE — DAILY BRIEF`,`Date: ${new Date().toLocaleDateString()}`,`Tasks: ${done} completed, ${open} open`,`High-priority open tasks: ${db.tasks.filter(x=>x.status!=='Done'&&x.priority==='High').map(x=>x.title).join('; ')||'None'}`,`Blocked: ${db.tasks.filter(x=>x.status==='Blocked').map(x=>x.title).join('; ')||'None'}`,`Drafts awaiting approval: ${db.drafts.filter(x=>x.status==='Awaiting Approval').map(x=>x.title).join('; ')||'None'}`,`Open leads: ${db.leads.filter(x=>x.status!=='Closed').length}`,`Reminder: review all public posts, outreach and spending manually.`];$('dailyBrief').innerHTML='<pre style="white-space:pre-wrap;font:inherit">'+esc(lines.join('\\n'))+'</pre>'}
+function renderSettings(){Object.entries(db.settings).forEach(([k,v])=>{if($(k))$(k).value=v})}
+function renderAll(){renderOverview();renderTasks();renderProjects();renderArtists();renderLeads();renderDrafts();renderReports();renderSettings()}
+function saveSettings(){db.settings={workspaceName:$('workspaceName').value,ownerName:$('ownerName').value,businessName:$('businessName').value};document.querySelector('header h1').textContent=db.settings.workspaceName;log('Updated workspace profile');persist('Profile saved')}
+function exportJSON(){let blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});download(blob,'a135-virtual-office-backup-'+new Date().toISOString().slice(0,10)+'.json')}
+function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let d=JSON.parse(r.result);if(!d||!Array.isArray(d.tasks))throw Error('Not a valid A135 backup');if(!confirm('Import this backup and replace the current local workspace data? Export current data first if needed.'))return;db={...db,...d,settings:{...db.settings,...(d.settings||{})}};log('Imported backup');persist('Backup imported')}catch(err){alert('Could not import: '+err.message)}e.target.value=''};r.readAsText(f)}
+function download(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+function csvCell(s){return '"'+String(s??'').replace(/"/g,'""')+'"'}
+function exportCSV(){let cols=['id','createdAt','title','request','priority','owner','deadline','status','notes'];let rows=[cols,...db.tasks.map(x=>cols.map(k=>x[k]||''))];download(new Blob([rows.map(r=>r.map(csvCell).join(',')).join('\\r\\n')],{type:'text/csv;charset=utf-8'}),'a135-tasks.csv')}
+function copyBrief(){let t=$('dailyBrief').innerText;navigator.clipboard?.writeText(t).then(()=>toast('Brief copied')).catch(()=>alert(t))}
+function copyText(id){let x=db.drafts.find(d=>d.id===id);if(x)navigator.clipboard?.writeText(x.content).then(()=>toast('Draft copied')).catch(()=>alert(x.content))}
+function resetData(){if(!confirm('Delete ALL locally saved office data? Export a backup first.'))return;localStorage.removeItem(KEY);db={tasks:[],projects:[],artists:[],leads:[],drafts:[],activity:[],settings:{workspaceName:'A135 Virtual Office',ownerName:'Office Manager',businessName:'A135MUSIKZ • Rap Groove Nation • Swaranjali Studio • Gullak'}};persist('Local data reset')}
+
+function setCloudStatus(s){const el=$('cloudStatus');if(el)el.textContent=s}
+function configureFirebase(){
+  let cfg;
+  try{cfg=JSON.parse($('firebaseConfig').value);if(!cfg.apiKey||!cfg.projectId||!cfg.authDomain||!cfg.appId)throw Error('Missing required Firebase config fields')}
+  catch(e){alert('Paste valid Firebase web config JSON first. '+e.message);return}
+  try{
+    if(!firebase.apps.length)firebase.initializeApp(cfg);
+    const auth=firebase.auth(),fdb=firebase.firestore();
+    window._a135Cloud={auth:auth,db:fdb,user:null};
+    auth.onAuthStateChanged(async user=>{
+      window._a135Cloud.user=user;
+      if(!user){$('cloudButton').textContent='Connect Cloud';setCloudStatus('Firebase configured; sign in to sync across devices.');return}
+      $('cloudButton').textContent='Cloud: '+(user.displayName||user.email||'Connected');
+      setCloudStatus('Signed in • loading cloud data…');
+      try{
+        const ref=fdb.collection('officeData').doc(user.uid),snap=await ref.get();
+        if(snap.exists&&snap.data().data){
+          if(confirm('Cloud data found. Load it and replace this browser workspace? Choose Cancel to upload this browser’s current data instead.')){
+            const remote=snap.data().data;db={...db,...remote,settings:{...db.settings,...(remote.settings||{})}};
+            localStorage.setItem(KEY,JSON.stringify(db));renderAll();
+          }else{await ref.set({data:db,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}
+        }else{await ref.set({data:db,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true})}
+        setCloudStatus('Cloud connected for '+(user.email||user.uid));renderAll();
+      }catch(e){setCloudStatus('Cloud read/write failed: '+e.message)}
+    });
+    localStorage.setItem('a135_firebase_config',JSON.stringify(cfg));
+    setCloudStatus('Firebase configured. Click Sign in with Google.');toast('Firebase configured');
+  }catch(e){alert('Firebase setup error: '+e.message)}
+}
+function cloudSignIn(){
+  if(!window._a135Cloud){
+    const saved=localStorage.getItem('a135_firebase_config');
+    if(saved){$('firebaseConfig').value=saved;configureFirebase()}
+    else{alert('First configure Firebase in Settings & Data.');document.querySelector('aside button[data-tab="settings"]').click();return}
+  }
+  if(window._a135Cloud)window._a135Cloud.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>alert('Sign-in failed: '+e.message));
+}
+function cloudSignOut(){if(window._a135Cloud)window._a135Cloud.auth.signOut().then(()=>setCloudStatus('Signed out. Local browser data remains available.'))}
+$('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'short',day:'numeric'});load();document.querySelector('header h1').textContent=db.settings.workspaceName;renderAll();
+const savedFirebase=localStorage.getItem('a135_firebase_config');
+if(savedFirebase){try{$('firebaseConfig').value=savedFirebase;configureFirebase()}catch(e){}}
+
+</script></body></html>

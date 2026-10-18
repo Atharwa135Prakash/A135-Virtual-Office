@@ -1,0 +1,39 @@
+# Google Forms → A135_MASTER_DATABASE
+
+This script copies each new submitted Google Form response into one central master spreadsheet. It stores the form row as JSON, preserving different forms' different question sets.
+
+## 1. Prepare the master spreadsheet
+1. Open the Google Sheet you want to use as your central database.
+2. Copy its ID from the URL: `https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit`.
+3. Create or keep the tab name `A135_MASTER_DATABASE` (the script can create it).
+
+## 2. Add the script
+1. In the spreadsheet that receives form responses, open **Extensions → Apps Script**.
+2. Paste the contents of `Code.gs` into the editor.
+3. Replace `PASTE_MASTER_SPREADSHEET_ID_HERE` with the master spreadsheet ID.
+4. Save the project.
+
+If the response spreadsheet is also your master spreadsheet, you can still use this approach, but it will copy form submissions into the dedicated master tab.
+
+## 3. Run setup once
+1. Choose `setupOffice` in the function dropdown and click Run.
+2. Approve the requested Google permissions.
+3. Confirm the `A135_MASTER_DATABASE` tab and header row were created.
+
+## 4. Install the trigger
+1. In Apps Script, open **Triggers** (clock icon) → **Add Trigger**.
+2. Choose function `onFormSubmit`.
+3. Event source: **From spreadsheet**.
+4. Event type: **On form submit**.
+5. Save.
+
+Do not run `onFormSubmit` manually; it needs the event object provided by a real form submission.
+
+## 5. Test
+Submit a new response through the actual Google Form. A new row should appear in `A135_MASTER_DATABASE`. If you submit the same event twice or the trigger retries the same row, the source-row check prevents a duplicate copy.
+
+## Notes
+- The script copies data only after a new form submission. It does not automatically backfill existing rows.
+- For existing responses, copy them manually or request a separate one-time backfill function.
+- Keep the master spreadsheet restricted to trusted users.
+- If different forms need different categories, add a `Form Name` question or configure separate script constants per form.

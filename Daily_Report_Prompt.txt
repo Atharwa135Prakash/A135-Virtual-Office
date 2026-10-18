@@ -1,0 +1,7 @@
+Using only the supplied task data, create a short daily report:
+- Completed tasks
+- Pending tasks
+- Blocked tasks and reasons
+- Drafts awaiting approval
+- Three priorities for next working session
+Do not invent progress or deadlines.
